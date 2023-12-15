@@ -1,0 +1,7 @@
+job:
+  chdir: true
+run:
+  dir: /Users/arrasy/L-BRDiv-New/MAACBasedOptim/outputs
+sweep:
+  dir: /Users/arrasy/L-BRDiv-New/MAACBasedOptim/outputs_sweep
+  subdir: ${run.seed}

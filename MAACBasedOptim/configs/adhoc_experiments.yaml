@@ -1,0 +1,102 @@
+defaults:
+  - hydra: hydra_simple
+  - _self_
+
+
+name: CookingZoo
+separate_controllers: false
+
+logger:
+  load_dir: ${name}
+  log_grad: false
+  project: DiversityGeneration
+  entity: gingerninja
+  logger_period: 0.001
+  save_model: true
+  save_model_period: 50
+
+# # Data collection-related parameters
+env:
+  #name: cookingZooEnv-v0
+  #Other possible env names: MARL-CooperativeReaching-5-50-blinded-asymmetric-v0, MARL-CooperativeReaching-5-50-blinded-v0, matrix-game-no-state-v0
+  name: matrix-game-no-state-v0
+  parallel:
+    sp_collection: 10
+    xp_collection: 30
+    adhoc_collection: 16
+    eval_collection: 16
+    eval: 6
+  model_id: 50
+  model_load_dir: /home/DiversityExperiments/MAACBasedOptim/outputs/CookingZoo/2023-07-27/06-24-01/models
+
+env_eval:
+  #Other possible env names: MARL-CooperativeReaching-5-50-blinded-asymmetric-adhoc-v0, MARL-CooperativeReaching-5-50-blinded-adhoc-v0, matrix-game-no-state-adhoc-v0
+  name: matrix-game-no-state-adhoc-v0
+  eps_per_interaction: 20
+
+run:
+  use_cuda: false
+  num_timesteps: 12000000
+  num_eval_episodes: 800
+  seed: 0
+  eval_seed: 500
+  total_checkpoints: 50
+  load_from_checkpoint: -1
+  device_id: 3
+
+populations:
+  num_populations: 3
+
+train:
+  timesteps_per_update: 4
+  gamma: 0.99
+  gamma_act_jsd: 0.1
+  target_update_rate: 1e-3
+  lr: 0.001
+  max_grad_norm: 1.0
+  lagrange_lr: 0.05
+  tolerance_factor: 1.0
+  with_lagrange: true
+  init_lagrange: 0.0
+  lagrange_update_period: 10
+  epochs_per_update: 10
+  eps_clip: 0.2
+  dual_clip: 3.0
+  anneal_end: 0.5
+  with_dual_clip: false
+  with_lipo: false
+
+loss_weights:
+  scale_length: 0.5
+  xp_val_loss_weight: 1.0
+  sp_val_loss_weight: 1.0
+  jsd_weight: 0.0
+  xp_loss_weights: 1.0
+  entropy_regularizer_loss: 0.001
+  lagrange_weights: 1.0
+  final_entropy_regularizer_loss: 0.001
+  anneal_end: 0.5
+  critic_loss_weight: 1.0
+  actor_loss_weight: 1.0
+  entropy_regularizer_loss_weight: 0.005
+
+model:
+  actor_dims:
+    - 32
+    - 32
+  critic_dims:
+    - 32
+    - 32
+  agent_rep_size: 64
+  enc_dims:
+    - 96
+    - 96
+
+any_play:
+  with_any_play: false
+  any_play_classifier_loss_weight: 1.0
+  any_play_lambda: 0.001
+  classifier_dims:
+    - 256
+    - 256
+  

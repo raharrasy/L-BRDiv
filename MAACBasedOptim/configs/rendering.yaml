@@ -1,0 +1,94 @@
+
+defaults:
+  - hydra: hydra_simple
+  - _self_
+
+
+name: CookingZoo
+separate_controllers: false
+
+logger:
+  load_dir: ${name}
+  log_grad: false
+  project: DiversityGeneration
+  entity: WANDBID
+  logger_period: 0.1
+  save_model: true
+  save_model_period: 5
+
+# # Data collection-related parameters
+env:
+  #name: cookingZooEnv-v0
+  name: matrix-game-no-state-v0
+  parallel:
+    sp_collection: 32
+    xp_collection: 128
+    eval: 32
+  # Directory of loaded models
+  model_load_dir: /Users/arrasy/L-BRDiv-New/MAACBasedOptim/outputs/models
+
+run:
+  use_cuda: false
+  num_timesteps: 32000000
+  num_eval_episodes: 1
+  seed: 0
+  eval_seed: 500
+  total_checkpoints: 50
+  load_from_checkpoint: 15
+  device_id: 3
+
+# Directory of loaded models
+load_dir: /Volumes/ARRASYHD/disp_figures/CoopReachingAsym
+render:
+  # ID of population being rendered
+  rendered_pop_id: 2
+
+populations:
+  num_populations: 3
+
+train:
+  timesteps_per_update: 8
+  gamma: 0.99
+  gamma_act_jsd: 0.1
+  target_update_rate: 1e-3
+  lr: 1e-4
+  lagrange_lr: 2.5
+  max_grad_norm: 10.0
+  tolerance_factor: 0.5
+  with_lagrange: true
+  with_lipo: false
+  init_lagrange: 0
+  lagrange_update_period: 10
+  epochs_per_update: 10
+  eps_clip: 0.2
+  dual_clip: 3.0
+  anneal_end: 0.5
+  with_dual_clip: false
+  lagrange_limit: 0.6
+  lagrange_upper_limit: 20.0
+
+loss_weights:
+  scale_length: 0.5
+  xp_val_loss_weight: 10.0
+  sp_val_loss_weight: 10.0
+  jsd_weight: 0.0
+  xp_loss_weights: 10
+  entropy_regularizer_loss: 0.025
+  final_entropy_regularizer_loss: 0.025
+  lagrange_weights: 1.0
+
+model:
+  actor_dims:
+    - 32
+    - 32
+  critic_dims:
+    - 32
+    - 32
+
+any_play:
+  with_any_play: false
+  any_play_classifier_loss_weight: 1.0
+  any_play_lambda: 0.001
+  classifier_dims:
+    - 256
+    - 256
